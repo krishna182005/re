@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ultimate Certificate Generator</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom CSS for tweaks -->
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="bg-gray-100 text-gray-900 transition-colors duration-500" id="body">
+
+  <!-- Dark/Light Toggle -->
+  <div class="fixed top-4 right-4 z-50 flex items-center gap-2">
+    <button id="modeToggle" class="rounded-full p-2 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 transition">
+      <i class="fa-solid fa-moon hidden dark:inline"></i>
+      <i class="fa-solid fa-sun dark:hidden"></i>
+    </button>
+    <span class="text-xs font-medium text-gray-500 hidden sm:inline" id="modeLabel">Light</span>
+  </div>
+
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 py-8 px-2">
+    <!-- Control Panel -->
+    <aside class="w-full md:w-1/3 bg-white dark:bg-gray-900 rounded-lg shadow-xl p-6 space-y-5">
+      <h1 class="text-2xl font-bold text-blue-700 dark:text-blue-300 flex items-center gap-2">
+        Certificate Generator
+        <span class="bg-yellow-300 px-2 py-0.5 rounded text-xs text-black">PRO</span>
+      </h1>
+
+      <!-- Free trial and PRO upgrade banner -->
+      <div id="trialBanner" class="bg-gray-200 dark:bg-gray-800 rounded p-3 text-center">
+        <span id="trialMessage" class="font-medium text-sm text-blue-800 dark:text-blue-200">5 PRO certificates left in your free trial.</span>
+      </div>
+      <div id="proBanner" class="bg-gradient-to-r from-blue-200 via-blue-100 to-yellow-100 dark:from-blue-900 dark:via-blue-800 dark:to-yellow-900 border-l-4 border-blue-500 rounded p-3 text-center hidden">
+        <h3 class="font-semibold text-gray-800 dark:text-gray-100 mb-1">Upgrade to PRO</h3>
+        <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">Unlock premium templates, bulk/ZIP/email, and more!</p>
+        <button class="btn-pro px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition" id="upgradeBtn">Get PRO for $29</button>
+      </div>
+
+      <!-- Tabs -->
+      <div>
+        <nav class="flex border-b mb-4">
+          <button class="tablink px-4 py-2 text-sm font-semibold focus:outline-none border-b-2 border-blue-500 text-blue-600" data-tab="main">Main</button>
+          <button class="tablink px-4 py-2 text-sm font-semibold focus:outline-none" data-tab="design">Design</button>
+          <button class="tablink px-4 py-2 text-sm font-semibold focus:outline-none" data-tab="advanced">Advanced</button>
+        </nav>
+
+        <!-- Main Tab -->
+        <div class="tab-content" id="tab-main">
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Template:</label>
+            <div class="flex gap-2 overflow-x-auto pb-1">
+              <button class="template-thumb border-2 border-blue-500 ring-2 ring-blue-400 rounded-lg w-20 h-16 flex-shrink-0" data-template="classic">
+                <img src="templates/classic.png" alt="Classic" class="w-full h-full object-cover rounded"/>
+              </button>
+              <button class="template-thumb border-2 border-transparent rounded-lg w-20 h-16 flex-shrink-0" data-template="modern">
+                <img src="templates/modern.png" alt="Modern" class="w-full h-full object-cover rounded"/>
+              </button>
+              <button class="template-thumb border-2 border-transparent rounded-lg w-20 h-16 flex-shrink-0" data-template="elegant">
+                <img src="templates/elegant.png" alt="Elegant" class="w-full h-full object-cover rounded"/>
+              </button>
+              <button class="template-thumb border-2 border-yellow-400 rounded-lg w-20 h-16 flex-shrink-0 pro-feature" data-template="premium1">
+                <img src="templates/premium1.png" alt="Premium 1" class="w-full h-full object-cover rounded"/>
+              </button>
+              <button class="template-thumb border-2 border-yellow-400 rounded-lg w-20 h-16 flex-shrink-0 pro-feature" data-template="premium2">
+                <img src="templates/premium2.png" alt="Premium 2" class="w-full h-full object-cover rounded"/>
+              </button>
+              <button class="template-thumb border-2 border-dashed rounded-lg w-20 h-16 flex-shrink-0" id="customTemplateBtn" title="Upload your own">
+                <span class="flex w-full h-full items-center justify-center text-3xl text-blue-400">+</span>
+              </button>
+              <input type="file" id="customTemplateUpload" accept="image/*" class="hidden"/>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Recipient Name:</label>
+            <input type="text" id="inputName" class="form-input" placeholder="e.g. John Doe" maxlength="64" autocomplete="off"/>
+          </div>
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Course/Event Title:</label>
+            <input type="text" id="inputCourse" class="form-input" placeholder="e.g. Advanced Web Dev"/>
+          </div>
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Organization:</label>
+            <input type="text" id="inputOrg" class="form-input" placeholder="e.g. Acme Corp."/>
+          </div>
+          <div class="flex gap-2">
+            <div class="flex-1">
+              <label class="block font-medium mb-1">Date:</label>
+              <input type="date" id="inputDate" class="form-input"/>
+            </div>
+            <div class="flex-1">
+              <label class="block font-medium mb-1">Certificate ID:</label>
+              <input type="text" id="inputCertID" class="form-input" maxlength="32"/>
+            </div>
+          </div>
+        </div>
+        <!-- Design Tab -->
+        <div class="tab-content hidden" id="tab-design">
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Font Family:</label>
+            <select id="fontFamily" class="form-select">
+              <option value="serif">Serif</option>
+              <option value="sans-serif">Sans Serif</option>
+              <option value="Georgia,serif">Georgia</option>
+              <option value="'Times New Roman',serif">Times New Roman</option>
+              <option value="Arial,sans-serif">Arial</option>
+              <option value="'Courier New',monospace">Courier New</option>
+              <option value="'Palatino Linotype',serif">Palatino</option>
+              <option value="'Garamond',serif">Garamond</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Font Size:</label>
+            <input type="range" id="fontSize" min="14" max="48" value="26" class="w-full">
+          </div>
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Accent Color:</label>
+            <input type="color" id="accentColor" value="#4a6fa5" class="w-12 h-8 p-0 border-none">
+          </div>
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Upload Logo:</label>
+            <input type="file" id="logoUpload" accept="image/*" class="form-input">
+          </div>
+          <div class="flex items-center gap-2 mb-3">
+            <input type="checkbox" id="toggleWatermark" class="form-checkbox">
+            <label for="toggleWatermark" class="font-medium">Remove Watermark/Branding</label>
+          </div>
+          <div class="flex items-center gap-2 mb-3">
+            <input type="checkbox" id="toggleQR" class="form-checkbox">
+            <label for="toggleQR" class="font-medium">Enable QR Verification</label>
+          </div>
+        </div>
+        <!-- Advanced Tab -->
+        <div class="tab-content hidden" id="tab-advanced">
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Signature 1 Name:</label>
+            <input type="text" id="sig1Name" class="form-input" placeholder="e.g. Jane Smith"/>
+          </div>
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Signature 1 Title:</label>
+            <input type="text" id="sig1Title" class="form-input" placeholder="e.g. Instructor"/>
+          </div>
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Signature 2 Name:</label>
+            <input type="text" id="sig2Name" class="form-input" placeholder="e.g. Michael Johnson"/>
+          </div>
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Signature 2 Title:</label>
+            <input type="text" id="sig2Title" class="form-input" placeholder="e.g. Head of Dept."/>
+          </div>
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Signature Upload:</label>
+            <input type="file" id="sigUpload1" accept="image/*" class="form-input"/>
+            <input type="file" id="sigUpload2" accept="image/*" class="form-input mt-2"/>
+          </div>
+          <div class="mb-3">
+            <label class="block font-medium mb-1">Bulk Generate (CSV):</label>
+            <input type="file" id="csvUpload" accept=".csv" class="form-input"/>
+            <small class="text-xs text-gray-500 dark:text-gray-400">CSV format: Name,Course,Date[,Org]</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Buttons -->
+      <div class="flex flex-col gap-2 mt-4">
+        <button id="btnDownloadPNG" class="bg-blue-600 hover:bg-blue-700 text-white rounded py-2 font-semibold flex items-center justify-center gap-2">
+          <i class="fa-solid fa-image"></i> Download PNG
+        </button>
+        <button id="btnDownloadPDF" class="bg-pink-600 hover:bg-pink-700 text-white rounded py-2 font-semibold flex items-center justify-center gap-2">
+          <i class="fa-solid fa-file-pdf"></i> Download PDF
+        </button>
+        <button id="btnDownloadZIP" class="bg-green-600 hover:bg-green-700 text-white rounded py-2 font-semibold flex items-center justify-center gap-2 pro-feature">
+          <i class="fa-solid fa-file-zipper"></i> Download ZIP (Bulk)
+        </button>
+        <button id="btnEmail" class="bg-purple-700 hover:bg-purple-800 text-white rounded py-2 font-semibold flex items-center justify-center gap-2 pro-feature">
+          <i class="fa-solid fa-envelope"></i> Email Certificate
+        </button>
+        <button id="btnPrint" class="bg-yellow-500 hover:bg-yellow-600 text-black rounded py-2 font-semibold flex items-center justify-center gap-2">
+          <i class="fa-solid fa-print"></i> Print
+        </button>
+        <button id="btnReset" class="bg-gray-400 hover:bg-gray-500 text-white rounded py-2 font-semibold flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate-left"></i> Reset Form
+        </button>
+        <button id="btnResetPos" class="bg-gray-700 hover:bg-gray-800 text-white rounded py-2 font-semibold flex items-center justify-center gap-2">
+          <i class="fa-solid fa-arrows-to-dot"></i> Reset Positions
+        </button>
+        <button id="btnDragToggle" class="bg-indigo-500 hover:bg-indigo-600 text-white rounded py-2 font-semibold flex items-center justify-center gap-2">
+          <i class="fa-solid fa-arrows-up-down-left-right"></i> Drag/Move Text
+        </button>
+      </div>
+    </aside>
+
+    <!-- Preview and Editor -->
+    <section class="w-full md:w-2/3 flex flex-col items-center">
+      <div class="relative w-full flex justify-center">
+        <div id="certificateCanvas" class="relative bg-white dark:bg-gray-950 rounded-lg shadow-2xl overflow-hidden transition-colors duration-500"
+             style="width:850px; height:600px; max-width:100vw; max-height:80vw;">
+          <!-- Certificate template and fields will be rendered here by JS -->
+        </div>
+      </div>
+      <div class="mt-3 text-xs text-gray-400 dark:text-gray-500">
+        Drag and drop text to reposition. Use reset to restore positions.
+      </div>
+    </section>
+  </div>
+
+  <!-- Libraries (all needed for features) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
