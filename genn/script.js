@@ -17,18 +17,18 @@
     }
   };
   const DEFAULTS = {
-    name: "John Doe",
-    course: "for successfully completing the Web Development Course with distinction",
-    org: "Acme Institute",
+    name: "your name!",
+    course: "for successfully completing the Web Development Course or do nothing!",
+    org: "Your Institute Name",
     date: (new Date()).toISOString().split("T")[0],
     certid: "",
     font: "serif",
     fontSize: 26,
     accent: "#4a6fa5",
     template: "classic",
-    sig1: "Jane Smith",
+    sig1: "Tony Stark",
     sig1title: "Course Instructor",
-    sig2: "Michael Johnson",
+    sig2: "Thor",
     sig2title: "Head of Department",
     watermarkOn: true,
     qr: false,
@@ -310,12 +310,7 @@
       wmark.textContent = "Verified Certificate";
       c.appendChild(wmark);
     }
-    if(state.branding) {
-      let brand = document.createElement("div");
-      brand.className = "certificate-branding";
-      brand.textContent = "certgen.app";
-      c.appendChild(brand);
-    }
+    // Branding REMOVED
     if(state.qr) {
       let qrdiv = document.createElement("div");
       qrdiv.id = "qrDiv";
