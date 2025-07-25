@@ -43,6 +43,10 @@
           <div class="mb-3">
             <label class="block font-medium mb-1">Template:</label>
             <div class="flex gap-2 overflow-x-auto pb-1">
+              <button class="template-thumb border-2 border-dashed rounded-lg w-20 h-16 flex-shrink-0" id="customTemplateBtn" title="Upload your own">
+                <span class="flex w-full h-full items-center justify-center text-3xl text-blue-400">+</span>
+              </button>
+              <input type="file" id="customTemplateUpload" accept="image/*" class="hidden"/>
               <button class="template-thumb border-2 border-blue-500 ring-2 ring-blue-400 rounded-lg w-20 h-16 flex-shrink-0" data-template="classic">
                 <img src="templates/classic.png" alt="Classic" class="w-full h-full object-cover rounded"/>
               </button>
@@ -58,10 +62,6 @@
               <button class="template-thumb border-2 border-yellow-400 rounded-lg w-20 h-16 flex-shrink-0" data-template="premium2">
                 <img src="templates/premium2.png" alt="Premium 2" class="w-full h-full object-cover rounded"/>
               </button>
-              <button class="template-thumb border-2 border-dashed rounded-lg w-20 h-16 flex-shrink-0" id="customTemplateBtn" title="Upload your own">
-                <span class="flex w-full h-full items-center justify-center text-3xl text-blue-400">+</span>
-              </button>
-              <input type="file" id="customTemplateUpload" accept="image/*" class="hidden"/>
             </div>
           </div>
           <div class="mb-3">
