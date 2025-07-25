@@ -10,11 +10,11 @@
       img: "",
       font: "serif"
     },
-    classic: { bg: "#f9f3e6", accent: "#4a6fa5", img: "templates/classic.png", font: "serif" },
-    modern: { bg: "#e6f3f9", accent: "#166088", img: "templates/modern.png", font: "sans-serif" },
-    elegant: { bg: "#f9e6f3", accent: "#a65aa5", img: "templates/elegant.png", font: "'Garamond', serif" },
-    premium1: { bg: "#e6f9e8", accent: "#14b89c", img: "templates/premium1.png", font: "Georgia,serif" },
-    premium2: { bg: "#f3e6f9", accent: "#a05ad3", img: "templates/premium2.png", font: "Arial,sans-serif" },
+    classic: { bg: "#f9f3e6", accent: "#4a6fa5", img: "https://i.pinimg.com/236x/cb/03/ed/cb03edd6f5e02cc4971f09c8aeae1f8b.jpg", font: "serif" },
+    modern: { bg: "#e6f3f9", accent: "#166088", img: "https://i.pinimg.com/736x/c5/f2/3b/c5f23b63bdf73d2c2de0b87665940974.jpg", font: "sans-serif" },
+    elegant: { bg: "#f9e6f3", accent: "#a65aa5", img: "https://static.vecteezy.com/system/resources/thumbnails/002/254/008/small/abstract-geometric-background-fluid-shape-and-elements-design-for-advertise-and-banner-free-vector.jpg", font: "'Garamond', serif" },
+    premium1: { bg: "#e6f9e8", accent: "#14b89c", img: "https://i.pinimg.com/1200x/d4/7b/64/d47b640765bee04768d7520da1800e56.jpg", font: "Georgia,serif" },
+    premium2: { bg: "#f3e6f9", accent: "#a05ad3", img: "https://files.123freevectors.com/wp-content/original/214697-green-and-gold-blank-geometric-business-card-design-background-vector.jpg", font: "Arial,sans-serif" },
   };
   const DEFAULTS = {
     name: "your name!",
