@@ -4,17 +4,17 @@
 (() => {
   // ----------- State and Constants -----------
   const TEMPLATES = {
-    classic: { bg: "#f9f3e6", accent: "#4a6fa5", img: "templates/classic.png", font: "serif" },
-    modern: { bg: "#e6f3f9", accent: "#166088", img: "templates/modern.png", font: "sans-serif" },
-    elegant: { bg: "#f9e6f3", accent: "#a65aa5", img: "templates/elegant.png", font: "'Garamond', serif" },
-    premium1: { bg: "#e6f9e8", accent: "#14b89c", img: "templates/premium1.png", font: "Georgia,serif" },
-    premium2: { bg: "#f3e6f9", accent: "#a05ad3", img: "templates/premium2.png", font: "Arial,sans-serif" },
-    custom: {
+     custom: {
       bg: "#f0f4ff",
       accent: "#2563eb",
       img: "",
       font: "serif"
     }
+    classic: { bg: "#f9f3e6", accent: "#4a6fa5", img: "templates/classic.png", font: "serif" },
+    modern: { bg: "#e6f3f9", accent: "#166088", img: "templates/modern.png", font: "sans-serif" },
+    elegant: { bg: "#f9e6f3", accent: "#a65aa5", img: "templates/elegant.png", font: "'Garamond', serif" },
+    premium1: { bg: "#e6f9e8", accent: "#14b89c", img: "templates/premium1.png", font: "Georgia,serif" },
+    premium2: { bg: "#f3e6f9", accent: "#a05ad3", img: "templates/premium2.png", font: "Arial,sans-serif" },
   };
   const DEFAULTS = {
     name: "your name!",
