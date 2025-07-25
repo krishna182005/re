@@ -1,7 +1,5 @@
-// -----------------------------
-// Certificate Generator by Copilot
-// Modular, commented, localStorage, responsive, drag+resize, dark mode, 5-free trial, PRO
-// -----------------------------
+// Certificate Generator (Open Source, All Features Free)
+// Modular, localStorage, responsive, drag+resize, dark mode
 
 (() => {
   // ----------- State and Constants -----------
@@ -9,12 +7,12 @@
     classic: { bg: "#f9f3e6", accent: "#4a6fa5", img: "templates/classic.png", font: "serif" },
     modern: { bg: "#e6f3f9", accent: "#166088", img: "templates/modern.png", font: "sans-serif" },
     elegant: { bg: "#f9e6f3", accent: "#a65aa5", img: "templates/elegant.png", font: "'Garamond', serif" },
-    premium1: { bg: "#e6f9e8", accent: "#14b89c", img: "templates/premium1.png", font: "Georgia,serif", pro: true },
-    premium2: { bg: "#f3e6f9", accent: "#a05ad3", img: "templates/premium2.png", font: "Arial,sans-serif", pro: true },
+    premium1: { bg: "#e6f9e8", accent: "#14b89c", img: "templates/premium1.png", font: "Georgia,serif" },
+    premium2: { bg: "#f3e6f9", accent: "#a05ad3", img: "templates/premium2.png", font: "Arial,sans-serif" },
     custom: {
       bg: "#f0f4ff",
       accent: "#2563eb",
-      img: "", // will be set dynamically
+      img: "",
       font: "serif"
     }
   };
@@ -35,21 +33,9 @@
     watermarkOn: true,
     qr: false,
     branding: true,
-    positions: {} // To store per-field positions
+    positions: {}
   };
-  const FIELDS = [
-    "title", "name", "course", "org", "date", "certid",
-    "sig1", "sig1title", "sig2", "sig2title"
-  ];
-  const DRAGGABLE_FIELDS = [
-    "title", "name", "course", "org", "date", "certid",
-    "sig1block", "sig2block"
-  ];
-  const MAX_FREE_TRIAL = 5;
-
   let state = {};
-  let isPro = false;
-  let trialLeft = MAX_FREE_TRIAL;
   let dragMode = false;
   let dragging = null;
   let dragOffset = [0, 0];
@@ -66,8 +52,7 @@
   function saveSettings() {
     localStorage.setItem("certgen_settings", JSON.stringify({
       ...state,
-      logoDataURL, sig1URL, sig2URL,
-      trialLeft, isPro
+      logoDataURL, sig1URL, sig2URL
     }));
   }
   function loadSettings() {
@@ -80,8 +65,6 @@
     logoDataURL = s.logoDataURL || "";
     sig1URL = s.sig1URL || "";
     sig2URL = s.sig2URL || "";
-    trialLeft = typeof s.trialLeft === "number" ? s.trialLeft : MAX_FREE_TRIAL;
-    isPro = !!s.isPro;
   }
 
   // ----------- Certificate ID Logic -----------
@@ -129,36 +112,12 @@
     }
   }
 
-  // ----------- UI: Free Trial and PRO -----------
-  function updateProState() {
-    if (isPro) {
-      $("#trialBanner").classList.add("hidden");
-      $("#proBanner").classList.add("hidden");
-      $$('.pro-feature').forEach(el=>{ el.classList.remove("opacity-60", "pointer-events-none"); });
-    } else if (trialLeft > 0) {
-      $("#trialBanner").classList.remove("hidden");
-      $("#trialMessage").textContent = `${trialLeft} PRO certificates left in your free trial.`;
-      $("#proBanner").classList.add("hidden");
-      $$('.pro-feature').forEach(el=>{ el.classList.remove("opacity-60", "pointer-events-none"); });
-    } else {
-      $("#trialBanner").classList.add("hidden");
-      $("#proBanner").classList.remove("hidden");
-      $$('.pro-feature').forEach(el=>{ el.classList.add("opacity-60", "pointer-events-none"); });
-    }
-    saveSettings();
-  }
-
   // ----------- UI: Inputs & Events -----------
   function setupInputs() {
     // Template thumbs
     $$('.template-thumb').forEach(btn => {
       btn.addEventListener("click", () => {
         let tmpl = btn.dataset.template;
-        if (TEMPLATES[tmpl].pro && !isPro && trialLeft <= 0) {
-          updateProState();
-          alert("Upgrade to PRO to use premium templates!");
-          return;
-        }
         $$('.template-thumb').forEach(b => b.classList.remove("border-blue-500", "ring-2", "ring-blue-400"));
         btn.classList.add("border-blue-500", "ring-2", "ring-blue-400");
         state.template = tmpl;
@@ -171,7 +130,7 @@
       });
     });
 
-    // All main inputs
+    // Main inputs
     $("#inputName").addEventListener("input", e => { state.name = e.target.value; saveSettings(); renderCertificate(); });
     $("#inputCourse").addEventListener("input", e => { state.course = e.target.value; saveSettings(); renderCertificate(); });
     $("#inputOrg").addEventListener("input", e => { state.org = e.target.value; saveSettings(); renderCertificate(); });
@@ -207,18 +166,9 @@
     // Export
     $("#btnDownloadPNG").addEventListener("click", () => { exportPNG(); });
     $("#btnDownloadPDF").addEventListener("click", () => { exportPDF(); });
-    $("#btnDownloadZIP").addEventListener("click", () => { if(isPro || trialLeft > 0) bulkExportZIP(); else updateProState(); });
-    $("#btnEmail").addEventListener("click", () => { if(isPro || trialLeft > 0) mockEmail(); else updateProState(); });
+    $("#btnDownloadZIP").addEventListener("click", () => { bulkExportZIP(); });
+    $("#btnEmail").addEventListener("click", () => { mockEmail(); });
     $("#btnPrint").addEventListener("click", () => { window.print(); });
-
-    $("#upgradeBtn").addEventListener("click", () => {
-      if(confirm("Upgrade to PRO for $29? (Demo only, no real payment)")) {
-        isPro = true;
-        saveSettings();
-        updateProState();
-        alert("PRO activated! Thank you.");
-      }
-    });
 
     // Custom template upload
     $("#customTemplateBtn").addEventListener("click", () => {
@@ -234,7 +184,6 @@
         state.template = "custom";
         saveSettings();
         renderCertificate();
-        // Visually activate custom
         document.querySelectorAll(".template-thumb").forEach(b => b.classList.remove("border-blue-500", "ring-2", "ring-blue-400"));
         document.getElementById("customTemplateBtn").classList.add("border-blue-500", "ring-2", "ring-blue-400");
       };
@@ -250,16 +199,11 @@
   }
   function makeDraggable(el, fieldKey) {
     el.style.position = "absolute";
-    // Use stored or default positions per template+field
     let pos = (state.positions[state.template] || {})[fieldKey];
-    if (!pos) {
-      // Default positions for each field
-      pos = getDefaultPos(fieldKey);
-    }
+    if (!pos) pos = getDefaultPos(fieldKey);
     el.style.left = pos[0] + "px";
     el.style.top = pos[1] + "px";
     el.draggable = false;
-    // Add drag handle
     let handle = document.createElement("span");
     handle.className = "drag-handle";
     handle.innerHTML = "<i class='fa-solid fa-up-down-left-right'></i>";
@@ -278,7 +222,6 @@
     let el = dragging.el;
     let x = evt.clientX - $("#certificateCanvas").getBoundingClientRect().left - dragOffset[0];
     let y = evt.clientY - $("#certificateCanvas").getBoundingClientRect().top - dragOffset[1];
-    // Keep within bounds
     x = Math.max(0, Math.min(x, $("#certificateCanvas").offsetWidth - el.offsetWidth));
     y = Math.max(0, Math.min(y, $("#certificateCanvas").offsetHeight - el.offsetHeight));
     el.style.left = x + "px";
@@ -303,7 +246,6 @@
     }
   }
   function getDefaultPos(fieldKey) {
-    // Simple layout grid
     const W = 850, H = 600;
     switch(fieldKey) {
       case "title": return [W/2-200,80];
@@ -321,11 +263,9 @@
   // ----------- Certificate Rendering -----------
   function renderCertificate() {
     const c = document.getElementById("certificateCanvas");
-    c.innerHTML = ""; // Clear previous children
-
+    c.innerHTML = "";
     let tmpl = TEMPLATES[state.template] || TEMPLATES.classic;
     c.style.background = tmpl.bg;
-
     let bgimg = document.createElement("img");
     bgimg.className = "absolute w-full h-full object-cover top-0 left-0 pointer-events-none select-none opacity-20";
     if (state.template === "custom" && customTemplateURL) {
@@ -336,24 +276,18 @@
       bgimg = null;
     }
     if(bgimg) c.appendChild(bgimg);
-
-    // Logo
     if(logoDataURL) {
       let logo = document.createElement("img");
       logo.src = logoDataURL;
       logo.className = "absolute left-8 top-8 w-28 h-28 object-contain pointer-events-none select-none";
       c.appendChild(logo);
     }
-
-    // Main Text fields
     let title = mkField("title", state.course ? "Certificate of Achievement" : "Certificate", "font-bold", state.fontSize + 10, state.accent);
     let name = mkField("name", state.name || DEFAULTS.name, "font-bold", state.fontSize + 6, "#222");
     let course = mkField("course", state.course || DEFAULTS.course, "", state.fontSize, "#444");
     let org = mkField("org", state.org || DEFAULTS.org, "italic", state.fontSize, state.accent);
     let date = mkField("date", "Date: " + (state.date || DEFAULTS.date), "", state.fontSize-2, "#666");
     let certid = mkField("certid", "ID: " + (state.certid ? state.certid : (state.certid = generateCertID())), "", state.fontSize-2, "#666");
-
-    // Signature blocks
     let sig1Block = document.createElement("div");
     sig1Block.className = "text-center";
     sig1Block.style.width = "220px";
@@ -370,21 +304,18 @@
       <div class="font-semibold">${state.sig2 || DEFAULTS.sig2}</div>
       <div class="text-xs text-gray-500">${state.sig2title || DEFAULTS.sig2title}</div>
     `;
-    // Watermark
     if(state.watermarkOn) {
       let wmark = document.createElement("div");
       wmark.className = "certificate-watermark";
       wmark.textContent = "Verified Certificate";
       c.appendChild(wmark);
     }
-    // Branding
     if(state.branding) {
       let brand = document.createElement("div");
       brand.className = "certificate-branding";
       brand.textContent = "certgen.app";
       c.appendChild(brand);
     }
-    // QR
     if(state.qr) {
       let qrdiv = document.createElement("div");
       qrdiv.id = "qrDiv";
@@ -393,7 +324,6 @@
       let url = `https://certgen.app/verify?certid=${encodeURIComponent(state.certid)}&name=${encodeURIComponent(state.name)}`;
       QRCode.toCanvas(qrdiv, url, { width: 80, margin: 1 }, err=>{});
     }
-    // Drag mode
     if(dragMode) {
       makeDraggable(title, "title");
       makeDraggable(name, "name");
@@ -404,7 +334,6 @@
       makeDraggable(sig1Block, "sig1block");
       makeDraggable(sig2Block, "sig2block");
     } else {
-      // Default: static, but positioned from stored locations
       setStaticPos(title, "title");
       setStaticPos(name, "name");
       setStaticPos(course, "course");
@@ -414,8 +343,6 @@
       setStaticPos(sig1Block, "sig1block");
       setStaticPos(sig2Block, "sig2block");
     }
-
-    // Add to canvas
     c.appendChild(title);
     c.appendChild(name);
     c.appendChild(course);
@@ -425,7 +352,6 @@
     c.appendChild(sig1Block);
     c.appendChild(sig2Block);
   }
-  // Make field element
   function mkField(field, val, extraCls, fsize, color) {
     let el = document.createElement("div");
     el.className = `select-none absolute ${extraCls||""}`;
@@ -460,11 +386,6 @@
   function handleCSVUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
-    if(!isPro && trialLeft <= 0) {
-      updateProState();
-      alert("Upgrade to PRO to use bulk generation!");
-      return;
-    }
     Papa.parse(file, {
       complete: function(results) {
         let rows = results.data.filter(r=>r[0]);
@@ -474,7 +395,6 @@
     });
   }
   async function bulkGenerateCerts(rows) {
-    // For each row, set state, render, export PNG to ZIP
     let zip = new JSZip();
     let orgBak = state.org;
     for (let i=0;i<rows.length;i++) {
@@ -485,7 +405,6 @@
       state.org = org || orgBak;
       state.certid = generateCertID();
       renderCertificate();
-      // Wait for DOM paint
       await new Promise(r=>setTimeout(r, 250));
       let blob = await exportPNGBlob();
       zip.file(`${state.name.replace(/\s/g,"_")}_certificate.png`, blob);
@@ -495,8 +414,6 @@
     a.href = URL.createObjectURL(content);
     a.download = "certificates.zip";
     a.click();
-    // Decrement trial
-    if(!isPro && trialLeft>0) { trialLeft--; updateProState(); }
     saveSettings();
     state.org = orgBak;
     renderCertificate();
@@ -509,7 +426,6 @@
       a.href = URL.createObjectURL(blob);
       a.download = `${state.name.replace(/\s/g,"_")}_certificate.png`;
       a.click();
-      if(!isPro && trialLeft>0) { trialLeft--; updateProState(); }
     });
   }
   async function exportPNGBlob() {
@@ -522,14 +438,12 @@
       const pdf = new window.jspdf.jsPDF('landscape', undefined, [canvas.width/2.6,canvas.height/2.6]);
       pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
       pdf.save(`${state.name.replace(/\s/g,"_")}_certificate.pdf`);
-      if(!isPro && trialLeft>0) { trialLeft--; updateProState(); }
     });
   }
 
   // ----------- Email (mock) -----------
   function mockEmail() {
-    alert("Mock: Certificate sent to recipient's email address! (Feature only available in PRO/licensed version.)");
-    if(!isPro && trialLeft>0) { trialLeft--; updateProState(); }
+    alert("Mock: Certificate sent to recipient's email address! (No actual email sent in open source mode.)");
   }
 
   // ----------- Reset Form -----------
@@ -566,8 +480,6 @@
     setupTabs();
     setupModeToggle();
     setupInputs();
-    updateProState();
-    // Fill initial inputs
     $("#inputName").value = state.name;
     $("#inputCourse").value = state.course;
     $("#inputOrg").value = state.org;
