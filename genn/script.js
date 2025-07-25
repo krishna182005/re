@@ -9,7 +9,7 @@
       accent: "#2563eb",
       img: "",
       font: "serif"
-    }
+    },
     classic: { bg: "#f9f3e6", accent: "#4a6fa5", img: "templates/classic.png", font: "serif" },
     modern: { bg: "#e6f3f9", accent: "#166088", img: "templates/modern.png", font: "sans-serif" },
     elegant: { bg: "#f9e6f3", accent: "#a65aa5", img: "templates/elegant.png", font: "'Garamond', serif" },
