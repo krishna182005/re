@@ -1,6 +1,8 @@
 Open Source Certificate Generator
 An easy-to-use, open-source certificate generator built with JavaScript, HTML, and CSS. Instantly create and customize professional certificates for events, workshops, and achievements!
 
+Project Link 🔗(https://img.shields.io/github/stars/krishna182005/re?style=social)](https://krishna182005.github.io/re/genn/) 
+
 🚀 Features
 Generate certificates dynamically with custom names and event details
 User-friendly interface for quick certificate creation
